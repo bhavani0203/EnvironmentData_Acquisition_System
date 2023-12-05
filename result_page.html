@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Result Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            text-align: center;
+            font-family: "Trebuchet MS", Arial;
+            background-color: beige;
+        }
+        h1 {
+            color: #0043af;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            margin: 8px;
+            width: 150px;
+        }
+        button {
+            background-color: #2ECC71;
+            font-size: 18px;
+            padding: 10px 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Average Sensor Data</h1>
+    
+    <label for="tempAverage">Temperature Average:</label>
+    <input type="text" id="tempAverage" readonly>
+
+    <br>
+
+    <label for="pressureAverage">Pressure Average:</label>
+    <input type="text" id="pressureAverage" readonly>
+
+    <br>
+	<label for="humidityAverage">Average of Humidity:</label>
+    <input type="text" id="humidityAverage" readonly>
+    <br>
+
+    <label for="gasAverage">Average of Gas:</label>
+    <input type="text" id="gasAverage" readonly>
+    <br>
+
+    <button onclick="goBack()">Go Back</button>
+
+    <script>
+        // Function to get parameters from URL
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Retrieve parameters from URL
+        var tempAverageParam = getParameterByName('tempAvg');
+        var pressureAverageParam = getParameterByName('pressureAvg');
+		var humidityAvgerage= getParameterByName('humidityAvg');
+        var gasAverage = getParameterByName('gasSumAvg');
+
+        // Update text fields with retrieved parameters
+        document.getElementById('tempAverage').value = tempAverageParam + ' °C';
+        document.getElementById('pressureAverage').value = pressureAverageParam + ' hPa';
+		document.getElementById('humidityAvg').value = humidityAverage + ' %';
+        document.getElementById('gasAvg').value = gasAverage;
+
+        // Function to go back to the previous page
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

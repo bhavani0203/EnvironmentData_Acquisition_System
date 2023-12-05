@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<head>
+    <title>ESP with BME680</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            text-align: center;
+            font-family: "Trebuchet MS", Arial;
+            background-color: beige;
+        }
+        table {
+            border-collapse: collapse;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        .sensor_1{
+            text-align: center;
+        }
+        .sensor_2{
+            text-align: center;
+        }
+        th {
+            padding: 12px;
+            background-color: #0043af;
+            color: white;
+        }
+        tr {
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+        tr:hover {
+            background-color: #bcbcbc;
+        }
+        td {
+            border: none;
+            padding: 12px;
+        }
+        .sensor {
+            color:white;
+            font-weight: bold;
+            background-color: #bcbcbc;
+            padding: 1px;
+
+       
+        }
+        .temperature-icon {
+            width: 30px;
+            height: auto;
+			vertical-align:bottom;
+            margin-right: 0px;
+			margin-bottom: 0px;
+			 display: inline-block;
+        }
+        button{
+		background-color: #2ECC71;
+		font-size: 18px; 
+            padding: 10px 15px;
+            ;
+        }
+    </style>
+</head>
+<body>
+   <!-- <h1>ESP with BME680</h1> -->
+   <br>
+   
+   <div>
+    <h1 style="text-align: center; font-family: Georgia, 'Times New Roman', Times, serif;">SENSOR DATA</h1> 
+   <br>
+    <table>
+   <tr><td>
+   
+       <!-- <tr><th>MEASUREMENT</th><th>VALUE</th></tr>  -->
+       
+       <div class="sensor_1">
+
+            <h1>Sensor 1</h1>
+        <p>Temperature (Celcius)   <img src="temp.jpeg" alt="temperature-icon" class="temperature-icon">       <span class="sensor" id="temp1">%TEMP_C%</span></p>
+        <p>Temperature (Fahrenheit)   <img src = "temp.jpeg" alt="temperature-icon" class="temperature-icon">      <span class="sensor" >%TEMP_F%</span></p>
+        <p>Pressure   <img src="pressure.jpeg" alt="pressure_icon" class="temperature-icon">      <span class="sensor" id="pressure1">%PRESSURE%</span></p>
+        <p>Humidity   <img src="humidity.jpeg" alt="humidity_icon" class="temperature-icon">      <span class="sensor" id="humidity1">%HUMIDITY%</span></p>
+        <p>Gas   <img src="gas.jpeg" alt="gas_icon" class="temperature-icon">      <span class="sensor" id="gas1">%GAS%</span></p>
+        </div>
+   
+      </td> 
+      <td>
+        <p></p>
+      </td>
+   <td>
+    <div class="sensor_2">
+
+        <h1>Sensor 2</h1>
+        <p>Temperature (Celcius)   <img src="temp.jpeg" alt="temperature-icon" class="temperature-icon">       <span class="sensor" id="temp2">%TEMP_C2%</span></p>
+        <p>Temperature (Fahrenheit)   <img src = "temp.jpeg" alt="temperature-icon" class="temperature-icon">      <span class="sensor">%TEMP_F2%</span></p>
+        <p>Pressure   <img src="pressure.jpeg" alt="pressure_icon" class="temperature-icon">      <span class="sensor" id="pressure2">%PRESSURE2%</span></p>
+        <p>Humidity   <img src="humidity.jpeg" alt="humidity_icon" class="temperature-icon">      <span class="sensor" id="humidity2">%HUMIDITY2%</span></p>
+        <p>Gas   <img src="gas.jpeg" alt="gas_icon" class="temperature-icon">      <span class="sensor" id="gas2">%GAS2%</span></p>
+        </div>
+        </td>
+        </tr>
+   </table>
+   <br>
+   <br>
+   <br>
+        <div class="buttons-class">
+            <button  onclick="calculateAverage()">Average</button>
+            
+            <button onclick="calculateSum()">Sum</button>
+        </div>
+    </div>
+    <script>
+
+        function calculateAverage() {
+            // Retrieve sensor values
+            var temp1 = parseFloat(document.getElementById('temp1').textContent);
+            var temp2 = parseFloat(document.getElementById('temp2').textContent);
+            var pressure1 = parseFloat(document.getElementById('pressure1').textContent);
+            var pressure2 = parseFloat(document.getElementById('pressure2').textContent);
+            var humidity1 = parseFloat(document.getElementById('humidity1').textContent);
+            var humidity2 = parseFloat(document.getElementById('humidity2').textContent);
+            var gas1 = parseFloat(document.getElementById('gas1').textContent);
+            var gas2 = parseFloat(document.getElementById('gas2').textContent);
+
+            // Calculate average values
+            var avgTemperature = ((temp1 + temp2) / 2).toFixed(2);
+            var avgPressure = ((pressure1 + pressure2) / 2).toFixed(2);
+            var avgHumidity = ((humidity1 + humidity2) / 2).toFixed(2);
+            var avgGas = ((gas1 + gas2) / 2).toFixed(2);
+
+            // Redirect to result_page.html with calculated averages as parameters
+            window.location.href = 'result_page.html?tempAvg=' + avgTemperature + '&pressureAvg=' + avgPressure + '&humidityAvg=' + avgHumidity + '&gasAvg=' + avgGas;
+        }
+
+
+function calculateSum() {
+            // Retrieve sensor values
+            var temp1 = parseFloat(document.getElementById('temp1').textContent);
+            var temp2 = parseFloat(document.getElementById('temp2').textContent);
+            var pressure1 = parseFloat(document.getElementById('pressure1').textContent);
+            var pressure2 = parseFloat(document.getElementById('pressure2').textContent);
+            var humidity1 = parseFloat(document.getElementById('humidity1').textContent);
+            var humidity2 = parseFloat(document.getElementById('humidity2').textContent);
+            var gas1 = parseFloat(document.getElementById('gas1').textContent);
+            var gas2 = parseFloat(document.getElementById('gas2').textContent);
+
+            // Calculate sum of temperatures, pressures, humidity, and gas
+            var tempSum = (temp1 + temp2).toFixed(2);
+            var pressureSum = (pressure1 + pressure2).toFixed(2);
+            var humiditySum = (humidity1 + humidity2).toFixed(2);
+            var gasSum = (gas1 + gas2).toFixed(2);
+
+            // Redirect to sum_page.html with calculated sums as parameters
+            window.location.href = 'sum_page.html?tempSum=' + tempSum + '&pressureSum=' + pressureSum + '&humiditySum=' + humiditySum + '&gasSum=' + gasSum;
+        }
+</script>
+</body>
+</html>

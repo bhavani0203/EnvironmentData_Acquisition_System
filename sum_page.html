@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sum Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            text-align: center;
+            font-family: "Trebuchet MS", Arial;
+            background-color: beige;
+        }
+        input {
+            font-size: 18px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #2ECC71;
+            font-size: 18px; 
+            padding: 10px 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sum Page</h1>
+    <br>
+
+    <label for="tempSum">Sum of Temperatures:</label>
+    <input type="text" id="tempSum" readonly>
+    <br>
+
+    <label for="pressureSum">Sum of Pressures:</label>
+    <input type="text" id="pressureSum" readonly>
+    <br>
+
+    <label for="humiditySum">Sum of Humidity:</label>
+    <input type="text" id="humiditySum" readonly>
+    <br>
+
+    <label for="gasSum">Sum of Gas:</label>
+    <input type="text" id="gasSum" readonly>
+    <br>
+
+    <button onclick="goBack()">Go Back</button>
+
+    <script>
+        // Function to retrieve parameters from URL
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        // Retrieve temperature, pressure, humidity, and gas sums from URL
+        var tempSum = getParameterByName('tempSum');
+        var pressureSum = getParameterByName('pressureSum');
+        var humiditySum = getParameterByName('humiditySum');
+        var gasSum = getParameterByName('gasSum');
+
+        // Set values to the input fields
+        document.getElementById('tempSum').value = tempSum + ' °C';
+        document.getElementById('pressureSum').value = pressureSum + ' hPa';
+        document.getElementById('humiditySum').value = humiditySum + ' %';
+        document.getElementById('gasSum').value = gasSum;
+
+        // Function to go back to the previous page
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
