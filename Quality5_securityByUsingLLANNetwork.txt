@@ -1,0 +1,142 @@
+import network
+import socket
+from bme680 import *
+from machine import Pin, I2C
+import ure as re  # MicroPython regular expression module for HTML escaping
+
+def escape_html(text):
+    """Escape HTML special characters."""
+    html_escape_table = {
+        "&": "&amp;",
+        '"': "&quot;",
+        "'": "&#39;",
+        ">": "&gt;",
+        "<": "&lt;",
+    }
+    return "".join(html_escape_table.get(c, c) for c in text)
+
+def generate_html(temperature1, temperature2, temperature_f1, pressure1, pressure2, humidity1, humidity2, gas1, gas2):
+    template_str = """
+    <html>
+    <head>
+        <title>ESP with BME680</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="data:,">
+        <style>
+            body {
+                text-align: center;
+                font-family: "Trebuchet MS", Arial;
+            }
+            table {
+                border-collapse: collapse;
+                margin-left:auto;
+                margin-right:auto;
+            }
+            th {
+                padding: 12px;
+                background-color: #0043af;
+                color: white;
+            }
+            tr {
+                border: 1px solid #ddd;
+                padding: 12px;
+            }
+            tr:hover {
+                background-color: #bcbcbc;
+            }
+            td {
+                border: none;
+                padding: 12px;
+            }
+            .sensor {
+                color:white;
+                font-weight: bold;
+                background-color: #bcbcbc;
+                padding: 1px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>ESP with BME680</h1>
+        <table>
+            <tr><th>MEASUREMENT</th><th>SENSOR 1</th><th>SENSOR 2</th></tr>
+            <tr><td>Temp. Celsius</td><td><span class="sensor">{{ temperature1 }} C</span></td><td><span class="sensor">{{ temperature2 }} C</span></td></tr>
+            <tr><td>Temp. Fahrenheit</td><td><span class="sensor">{{ temperature_f1 }} F</span></td><td><span class="sensor">{{ temperature_f2 }} F</span></td></tr>
+            <tr><td>Pressure</td><td><span class="sensor">{{ pressure1 }} hPa</span></td><td><span class="sensor">{{ pressure2 }} hPa</span></td></tr>
+            <tr><td>Humidity</td><td><span class="sensor">{{ humidity1 }} %</span></td><td><span class="sensor">{{ humidity2 }} %</span></td></tr>
+            <tr><td>Gas</td><td><span class="sensor">{{ gas1 }} KOhms</span></td><td><span class="sensor">{{ gas2 }} KOhms</span></td></tr>
+        </table>
+    </body>
+    </html>
+    """
+
+    template = re.sub("{{(.*?)}}", lambda m: escape_html(eval(m.group(1))), template_str)
+    return template
+
+def web_page(bme, bme2):
+    try:
+        # Sensor 1 data
+        temperature1 = round(bme.temperature, 2)
+        temperature_f1 = round((bme.temperature) * (9/5) + 32, 2)
+        pressure1 = round(bme.pressure, 2)
+        humidity1 = round(bme.humidity, 2)
+        gas1 = round(bme.gas/1000, 2)
+
+        # Sensor 2 data
+        bme2._perform_reading()
+        temperature2 = round(bme2.temperature, 2)
+        pressure2 = round(bme2.pressure, 2)
+        humidity2 = round(bme2.humidity, 2)
+        gas2 = round(bme2.gas/1000, 2)
+
+        html = generate_html(temperature1, temperature2, temperature_f1, pressure1, pressure2, humidity1, humidity2, gas1, gas2)
+
+    except Exception as e:
+        print(f"An error occurred while reading sensor data: {e}")
+        html = "<html><head><title>Error</title></head><body><h1>Error Reading Sensor Data</h1></body></html>"
+
+    return html
+
+def ap_mode(ssid, password):
+    try:
+        # Just making our internet connection
+        ap = network.WLAN(network.AP_IF)
+        ap.config(essid=ssid, password=password)
+        ap.active(True)
+
+        while not ap.active():
+            pass
+        print('AP Mode Is Active, You can Now Connect')
+        print('IP Address To Connect to:: ' + ap.ifconfig()[0])
+
+        i2c = I2C(0, scl=Pin(1), sda=Pin(0))
+        i2c_2 = I2C(1, sda=Pin(2), scl=Pin(3))
+        bme = BME680_I2C(i2c=i2c)
+        bme2 = BME680_I2C(i2c=i2c_2)
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # creating socket object
+        s.bind(('', 80))
+        s.listen(5)
+        s.settimeout(5)  # Set a timeout for socket operations
+
+        while True:
+            try:
+                conn, addr = s.accept()
+                print('Got a connection from %s' % str(addr))
+                request = conn.recv(1024)
+                print('Content = %s' % str(request))
+                response = web_page(bme, bme2)
+                conn.send(response)
+                conn.close()
+            except socket.timeout:
+                print("Socket operation timed out.")
+            except Exception as conn_error:
+                print(f"An error occurred while handling connection: {conn_error}")
+
+    except Exception as ap_error:
+        print(f"An error occurred in access point mode: {ap_error}")
+
+try:
+    ap_mode('Rasberrywifi', 'PASSWORD')
+except Exception as main_error:
+    print(f"An error occurred in the main program: {main_error}")
