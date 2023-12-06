@@ -1,0 +1,13 @@
+1)Sensor Data Collection and Summarization:
+
+FR1: The system must collect data from a network of sensors.
+FR2: The collected data should be summarized, including calculations like averages, identification of maximum and minimum values, and generation of histograms.
+
+2)User-Friendly GUI:
+
+FR3: The system must provide a user-friendly graphical user interface (GUI) on the server for end-users.
+FR4: The GUI should display the summarized sensor data for easy analysis.
+
+3)Observer Design Pattern:
+
+FR7:To optimize power management and conserve battery by having the server pull sensor data instead of pushing it
