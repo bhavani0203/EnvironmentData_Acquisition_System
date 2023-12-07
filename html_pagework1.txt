@@ -1,0 +1,128 @@
+{% args data %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Sensor Data</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Data</title>
+    <link rel="stylesheet" href="/static/index.css" />
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <script src="/static/index.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #sensorDataDisplay {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .sensor-section {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px;
+            width: 250px;
+        }
+
+        .sensor-section h3 {
+            color: #0043af;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+        }
+
+        .temperature-icon {
+            width: 20px;
+            height: auto;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .chart {
+            margin: 20px;
+        }
+
+        .sensor-chart {
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #fff;
+        }
+        #sensor-1 {
+            background-color: #2ECC71;
+        }
+        #sensor-2 {
+            background-color: #2ECC71;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="sensorDataDisplay">
+        <div class="sensor-section" id="sensor-1">
+            <h3>Sensor 1</h3>
+            <label for="temp_1">Temperature</label><img src="./humidity.jpeg" alt="" class="temperature-icon">
+            <input type="text" id="temp_1" value="{{ data[0]['temp'] }}" readonly>
+
+            <label for="pres_1">Pressure</label>
+            <input type="text" id="pres_1" value="{{ data[0]['pres'] }}" readonly>
+
+            <label for="hum_1">Humidity</label>
+            <input type="text" id="hum_1" value="{{ data[0]['hum'] }}" readonly>
+
+            <label for="gas_1">Gas</label>
+            <input type="text" id="gas_1" value="{{ data[0]['gas'] }}" readonly>
+        </div>
+
+        <div class="sensor-section" id="sensor-2">
+            <h3>Sensor 2</h3>
+            <label for="temp_2">Temperature</label>
+            <input type="text" id="temp_2" value="{{ data[1]['temp_2'] }}" readonly>
+
+            <label for="pres_2">Pressure</label>
+            <input type="text" id="pres_2" value="{{ data[1]['pres_2'] }}" readonly>
+
+            <label for="hum_2">Humidity</label>
+            <input type="text" id="hum_2" value="{{ data[1]['hum_2'] }}" readonly>
+
+            <label for="gas_2">Gas</label>
+            <input type="text" id="gas_2" value="{{ data[1]['gas_2'] }}" readonly>
+        </div>
+
+        
+    </div>
+
+    <script src="static/index.js"></script>
+</body>
+</html>
+

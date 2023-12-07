@@ -1,0 +1,58 @@
+from microdot_asyncio import Microdot, Response, send_file
+from microdot_asyncio_websocket import with_websocket
+from networkConnection import *
+from microdot_utemplate import render_template
+from ldr_photoresistor_module import LDR
+#from ldr_photoresistor_module import BME680Sensor
+from sensoReader import sensor_datacall
+import asyncio
+
+app = Microdot()
+Response.default_content_type = 'text/html'
+
+
+
+ap_mode('Rasberrywifi', 'PASSWORD')
+
+@app.get('/')
+async def index(request):
+    while True:
+        return render_template('index.html',data=sensor_datacall(),)
+
+async def send_sensor_data(ws):
+    while True:
+        data = await sensor_datacall()
+        data_json = json.dumps(data)
+        await ws.send(data_json)
+        await asyncio.sleep(5)  # Adjust the interval as needed
+ 
+@app.get('/average')
+async def index(request):
+    while True:
+        return render_template('index1.html',data=sensor_datacall(),)
+
+ 
+# @app.route('/ws')
+# @with_websocket
+# async def read_sensor(request, ws):
+#     #asyncio.create_task(send_sensor_data(ws))
+#      while True:
+# #         data = await ws.receive()
+#         time.sleep(.1)
+#         await ws.send(str(ldr.get_bme_sensor_data()))
+
+
+    
+
+# Static CSS/JSS
+@app.route("/static/<path:path>")
+def static(request, path):
+    if ".." in path:
+        # directory traversal is not allowed
+        return "Not found", 404
+    return send_file("static/" + path)
+  
+  
+  
+app.run(debug=True, port=8000)
+
